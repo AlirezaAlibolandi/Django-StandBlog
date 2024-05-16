@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load render_partial %}
+{% load social_share %}
+
+
+{% block content %}
+    <!-- Page Content -->
+    <!-- Banner Starts Here -->
+    <div class="heading-page header-text">
+        <section class="page-heading">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-content">
+                            <h4>{{ articles.category }}</h4>
+                            <h2>{{ articles.title }}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Banner Ends Here -->
+
+
+    <section class="blog-posts grid-system">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="all-blog-posts">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="blog-post">
+                                    <div class="blog-thumb">
+                                        <img src="{{ articles.images.url }}" alt="">
+                                    </div>
+                                    <div class="down-content">
+                                        <span>{{ articles.category }}</span>
+                                        <a href="post-details.html"><h4>{{ articles.title }}</h4></a>
+                                        <ul class="post-info">
+                                            <li><a href="#">{{ articles.author }}</a></li>
+                                            <li><a href="#">{{ articles.pub_date.date }}</a></li>
+                                            <li><a href="#">{{ articles.articles_comments.count }} Comments</a></li>
+                                        </ul>
+                                        <p>{{ articles.body }}</p>
+                                        <div class="post-options">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <ul class="post-tags">
+                                                        <li><i class="fa fa-tags"></i></li>
+                                                        <li><a href="#">Best Templates</a>,</li>
+                                                        <li><a href="#">TemplateMo</a></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-6">
+                                                    <ul class="post-share">
+                                                        <li><i class="fa fa-share-alt"></i></li>
+                                                        <li>{% post_to_telegram article.body|slice:":200" article.id "Telegram ," %}</li>
+                                                        <li>{% post_to_whatsapp article.id "Whatsapp" %}</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="sidebar-item comments">
+                                    <div class="sidebar-heading">
+                                        <h2>{{ articles.articles_comments.count }} comments</h2>
+                                    </div>
+                                    <div class="content">
+                                        <ul>
+
+                                            {% for comment in articles.articles_comments.all %}
+                                                {% if comment.parent == None %}
+                                                    <li>
+                                                        <div class="author-thumb">
+                                                            <img src="{% static 'images/comment-author-03.jpg' %}"
+                                                                 alt="">
+                                                        </div>
+                                                        <div class="right-content">
+                                                            <h4>{{ comment.author.get_full_name }}<span>{{ comment.pub_date }}</span>
+                                                            </h4>
+                                                            <p>{{ comment.comment }}</p>
+                                                            <button onclick="set_value({{ comment.id }})"  class="btn btn-primary">
+                                                                Reply
+                                                            </button>
+                                                        </div>
+                                                    </li>
+                                                    {% for reply in comment.replies.all %}
+                                                        <li class="replied">
+                                                            <div class="author-thumb">
+                                                                <img src="{% static 'images/comment-author-02.jpg' %}"
+                                                                     alt="">
+                                                            </div>
+                                                            <div class="right-content">
+                                                                <h4>{{ reply.author }}<span>{{ reply.pub_date }}</span>
+                                                                </h4>
+                                                                <p>{{ reply.comment }}</p>
+                                                            </div>
+                                                        </li>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            {% endfor %}
+
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="sidebar-item submit-comment">
+                                    <div class="sidebar-heading">
+                                        <h2>Your comment</h2>
+                                    </div>
+                                    <div class="content">
+                                        <form id="comment" id="comment" action="" method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="parent_id" id="parent_id" value="">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <fieldset>
+                                                        <textarea name="message" id="comment" name="message" rows="6" id="message"
+                                                                  placeholder="Type your comment"
+                                                                  required=""></textarea>
+                                                    </fieldset>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <fieldset>
+                                                        <button type="submit" id="form-submit" class="main-button">
+                                                            Submit
+                                                        </button>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% render_partial "blog_module:sidebar_partial" %}
+            </div>
+        </div>
+    </section>
+    <script>
+        function set_value(id) {
+            document.getElementById('parent_id').value = id;
+            window.location.href = "#comment";
+        }
+    </script>
+
+{% endblock %}
