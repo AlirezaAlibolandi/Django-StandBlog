@@ -49,15 +49,15 @@
                         {% if request.user.is_authenticated %}
                             {% if request.user.first_name and request.user.last_name %}
                                 <a class="btn btn-success"
-                                   href=" url 'accounts_module:logout' ">{{ request.user.first_name }} {{ request.user.last_name }}</a>
+                                   href=" {% url 'account_module:logout' %}">{{ request.user.first_name }} {{ request.user.last_name }}</a>
                             {% else %}
                                 <a class="btn btn-success"
-                                   href=" url 'accounts_module:logout' ">{{ request.user.username }}</a>
+                                   href="{% url 'account_module:logout' %}">{{ request.user.username }}</a>
                             {% endif %}
                         {% else %}
                             <div class="btn btn-warning">
-                                <a href="test" style="color: #ffffff">Login</a> /
-                                <a href="test" style="color: #ffffff">Register</a>
+                                <a href="{% url 'account_module:login' %}" style="color: #ffffff">Login</a> /
+                                <a href="{% url 'account_module:register' %}" style="color: #ffffff">Register</a>
                             </div>
                         {% endif %}
                     </li>

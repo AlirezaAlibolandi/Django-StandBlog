@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_render_partial',
     'django_social_share',
-    "blog_module.apps.BlogModuleConfig"
+    "blog_module.apps.BlogModuleConfig",
+    "account_module.apps.AccountModuleConfig"
 ]
 
 MIDDLEWARE = [
